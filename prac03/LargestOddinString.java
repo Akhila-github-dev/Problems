@@ -10,7 +10,7 @@ public class LargestOddinString {
 	}
 		public static String odd(String s) {
 		for (int i = s.length() - 1; i >= 0; i--) {
-            char c = s.charAt(i);
+            int c = s.charAt(i)-'0';
             if (c   % 2 != 0) { // Check if it's an odd digit
                 return s.substring(0, i+1); // Return the substring up to the odd digit
             }
