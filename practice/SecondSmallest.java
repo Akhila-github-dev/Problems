@@ -20,6 +20,7 @@ public class SecondSmallest {
 				small=arr[i];    //1
 			}
 			else if(arr[i]<sec_small&& arr[i]!=small) {
+				third_small=sec_small;
 				sec_small=arr[i];
 			}
 			else if(arr[i]<third_small&&arr[i]!=sec_small) {
