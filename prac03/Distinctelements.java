@@ -25,4 +25,22 @@ public class Distinctelements {
 
 	}
 
+(or)
 
+	int arr[]= {1,1,2,2,3,4,5};
+	int index=0;
+for(int i=0;i<arr.length;i++) {
+		boolean isduplicate=false;
+		for(int j=i+1;j<arr.length;j++) {
+			if(arr[i]==arr[j]) {
+				isduplicate=true;
+				break;
+			}
+		}
+	if(!isduplicate) {
+			arr[index++]=arr[i];
+		}
+	}
+for(int i=0;i<index;i++) {
+syso(arr[i]);
+}
