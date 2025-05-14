@@ -12,6 +12,7 @@ public class Distinctelements {
             System.out.print(arr[i] + " ");
         }
     }
+	//sorted array remove duplicates
     static int removeDuplicates(int[] arr) {
         int i = 0;
         for (int j = 1; j < arr.length; j++) {
