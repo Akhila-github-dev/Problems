@@ -49,4 +49,18 @@ public class Employee implements Comparator<Employee> {
 		Collections.sort(list, new Employee());
         System.out.println(list);
 	}
+
+
+
+	================================================================================
+	static Comparator<Employee> agecomp = new Comparator<Employee>() {
+
+		@Override
+		public int compare(Employee o1, Employee o2) {
+
+			return o1.age - o2.age;
+		}
+	};
+
+	Collections.sort(list,agecomp);
 }
