@@ -19,7 +19,7 @@ public class Singleton {
 	
 }
 
-//
+//System.out.println(Singleton.getObjeSingleton());
 ////find the emp with max salary in each dept
 //
 // select max(salary) from emp group by dept;
