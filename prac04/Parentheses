@@ -1,0 +1,26 @@
+public class Parenthese{
+
+main(){
+
+  String s = "(()())(())";
+		StringBuilder sb = new StringBuilder();
+
+		int count = 0;
+		char[] c = s.toCharArray();
+      for (char i : c) {
+			if (i == '(') {
+				if (count > 0) {
+					sb.append(i);
+				}
+				count++;
+
+			}else {
+				count--;
+				if (count > 0) {
+					sb.append(i);
+				}
+			}
+}
+Syso(sb);
+}
+}
