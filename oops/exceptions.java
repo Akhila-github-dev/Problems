@@ -16,4 +16,5 @@ public class exceptions {
 			System.out.println("main method exception handled");
 		}
 	}
+//main method exception handled
 }
