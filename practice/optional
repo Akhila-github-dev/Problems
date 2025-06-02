@@ -2,18 +2,14 @@ import java.util.Optional;
 
 public class OptionalExample {
     public static void main(String[] args) {
-        // Example with a non-null value
-        Optional<String> optionalValue = Optional.ofNullable(getValue());
-
-        // Safe retrieval using orElse
-        String result = optionalValue.orElse("Default Value");
-        System.out.println("Result: " + result);
-
-        // Using ifPresent to execute logic only if value is present
-        optionalValue.ifPresent(value -> System.out.println("Processing: " + value));
-    }
-
-    public static String getValue() {
-        return null; // Simulating a possible null return value
+        String s=null;
+		
+		Optional<String> op=Optional.ofNullable(s);
+		
+		String orElse = op.orElse("defa");
+		System.out.println(orElse);
+		
+		op.ifPresent(v-> System.out.println(v));
+	
     }
 }
