@@ -11,9 +11,9 @@ public class ex1 {
 		}else {
 			System.out.println("not equal");
 		}
-		
+		//output -> equal
 		
 		String s2="hello";
-		System.out.println(s.equals(s2));
+		System.out.println(s.equals(s2)); // true
 	}
 }
