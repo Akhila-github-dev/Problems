@@ -12,7 +12,7 @@ public class ex2 {
 			System.out.println("not equal");
 		}
 		
-		
+		//output ->not equal 
 	}
 
 }
