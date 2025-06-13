@@ -1,5 +1,6 @@
 
 // longest palindrome substring
+//s ="babad"; output- bab or aba
 class Solution {
     public String longestPalindrome(String s) {
        if (s == null || s.length() < 1) return "";
