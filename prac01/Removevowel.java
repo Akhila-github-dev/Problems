@@ -22,3 +22,12 @@ public class Removevowel {
 	}
 
 }
+================================================================
+using streams
+String result = input.chars()
+            .mapToObj(c -> String.valueOf((char) c))
+            .filter(c -> !"aeiouAEIOU".contains(c))
+            .collect(Collectors.joining());
++=================================================================
+String result = input.replaceAll("[aeiouAEIOU]", "");	
+	
