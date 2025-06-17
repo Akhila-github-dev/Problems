@@ -32,3 +32,13 @@ public class ex1 {
 	}
 	
 }
+
+output 
+5
+1
+2
+6
+7
+Exception in thread "main" com.myException1
+	at Practice/com.ex1.main(ex1.java:29)
+
