@@ -166,7 +166,44 @@ public class Streams {
      String collect2 = Stream.of(str.split(" ")).map(word->new StringBuffer(word).reverse()).collect(Collectors.joining(" "));
 	
 	 System.out.println(collect2);
-	
+	=========================================================================
+		import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
+
+public class StreamExamples {
+
+    // Functional Interface
+    @FunctionalInterface
+    interface StringProcessor {
+        String process(String input);
+    }
+
+    // Method for method reference
+    public static String toUpper(String str) {
+        return str.toUpperCase();
+    }
+
+    public static void main(String[] args) {
+        List<String> names = Arrays.asList("Alice", "bob", "Charlie", "alex", "David");
+
+        // Lambda Expression
+        StringProcessor exclaim = s -> s + "!";
+
+        // Method Reference
+        StringProcessor toCaps = StreamExamples::toUpper;
+
+        // Stream operations
+        List<String> result = names.stream()
+            .filter(name -> name.startsWith("A") || name.startsWith("a"))      // Filter names starting with A/a
+            .map(toCaps::process)                                              // Use method reference
+            .map(exclaim::process)                                             // Use lambda
+            .sorted(Comparator.naturalOrder())                                 // Sort naturally
+            .collect(Collectors.toList());                                     // Collect into a list
+
+        result.forEach(System.out::println);                                   // Method reference to print
+    }
+}
 	
 
 	}
