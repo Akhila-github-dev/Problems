@@ -18,11 +18,6 @@ public class CountOfOccurences {
 				hash[arr[i]]++;
 			}
 			for(int i=0;i<hash.length;i++) {
-				if(hash[i]>=1) {
-					//System.out.println(i+" "+hash[i]);
-				}
-			
-			
 			if(hash[i]>max) {
 				max=hash[i];
 				c=i;
