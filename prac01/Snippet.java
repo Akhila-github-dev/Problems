@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Snippet {
 	public static void main(String[] args) {
 		
-	
+	// zeros to back
 	int arr[]= {14, 0, 5, 2, 0, 3, 0};
 			int j=arr.length-1; //7
 			for(int i=arr.length-1;i>=0;i--) {
@@ -21,7 +21,7 @@ public class Snippet {
 			System.out.println(Arrays.toString(arr));
 		
 	//==============================================================================
-			
+		// zeros to front 	
 	    int ar[]= {14, 0, 5, 2, 0, 3, 0};
 	
 		int g=0;
@@ -47,7 +47,7 @@ public class Snippet {
 			
 	//*****************************************************************************		
 			
-		
+	//percentage of uppercase lowercase	
 
 	String s="Ab3cDre@5Ud$f";
 	       
