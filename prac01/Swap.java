@@ -13,6 +13,12 @@ public class Swap {
 		System.out.println(s1);
 		s=s.substring(s1.length());
 		System.out.println(s);
+
+		int a=10,b=12;
+		a=a+b;
+		b=a-b;
+		a=a-b;
+		syso(a+" "+b);
 	}
 
 }
