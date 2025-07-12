@@ -59,6 +59,14 @@ public class CountOfOccurences {
 
 		}
 ===================================================================================================
+	String s = "abcabde";
 
+		Map<Character, Integer> map = new HashMap<Character, Integer>();
+		for (char c : s.toCharArray()) {
+			map.put(c, map.getOrDefault(c, 0) + 1);
+		}
+		System.out.println(map);
+
+	}
 }
 
