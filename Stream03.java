@@ -45,6 +45,7 @@ public class Stream03 {
         
         //dates.sort(Comparator.naturalOrder());
         dates.sort((a,b)->a.compareTo(b));
+		dates.sort(LocalDate::compareTo);
         System.out.println(dates);
 
      //************************************************************************************
@@ -60,3 +61,4 @@ public class Stream03 {
 	}
 
 }
+
