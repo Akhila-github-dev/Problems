@@ -1,20 +1,31 @@
 Best Time to Buy and Sell Stock
-Input: prices = [7, 1, 5, 3, 6, 4] 
+Input: prices = [7, 13, 5, 3, 6, 1, 4] 
 Output: 5 
-Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Explanation: Buy on day 1 (price = 7) and sell on day 2 (price = 13), profit = 13-7 = 6.
 
 public class Exercise {
-    public int maxProfit(int[] prices) {
-        int minPrice = Integer.MAX_VALUE;
-        int maxProfit = 0;
- 
-        for (int price : prices) {
-            if (price < minPrice) {
-                minPrice = price;
-            } else if (price - minPrice > maxProfit) {
-                maxProfit = price - minPrice;
-            }
-        }
- 
-        return maxProfit;
-    }
+    public static void maxProfit(int[] prices) {
+      int[] prices = { 7, 13, 5, 3, 6, 1, 4 };
+
+		int minPrice = Integer.MAX_VALUE;
+		int maxProfit = 0;
+		int buyAt = 0;
+		int sellAt = 0;
+		for (int price : prices) {
+			if (price < minPrice) {
+				minPrice = price;
+			} else if (price - minPrice > maxProfit) {
+
+				maxProfit = price - minPrice;
+				buyAt = minPrice;
+				sellAt = price;
+
+			}
+		}
+
+		System.out.println(maxProfit);  //6
+		System.out.println(minPrice);  //1
+		System.out.println(buyAt);  //7
+		System.out.println(sellAt);  //13
+       
+}
