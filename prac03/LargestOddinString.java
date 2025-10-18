@@ -4,19 +4,27 @@ public class LargestOddinString {
 
 	public static void main(String[] args) {
 
-       String s="34567";
+       String s="034567";
        
 		System.out.println(odd(s));
 	}
 		public static String odd(String s) {
-		for (int i = s.length() - 1; i >= 0; i--) {
-            int c = s.charAt(i)-'0';
-            if (c   % 2 != 0) { // Check if it's an odd digit
-                return s.substring(0, i+1); // Return the substring up to the odd digit
-            }
-        }
-        return ""; // If no odd digit is found, return an empty string
-    }
+		int ind = -1;
+
+		    for (int i = s.length() - 1; i >= 0; i--) {
+		        if ((s.charAt(i) - '0') % 2 != 0) {
+		            ind = i;
+		            break;
+		        }
+		    }
+
+		    if (ind == -1) {
+		        return "";
+		    }
+
+		    return s.substring(0, ind + 1).replaceFirst("^0+", "");
+		}
 	}
+
 
 
