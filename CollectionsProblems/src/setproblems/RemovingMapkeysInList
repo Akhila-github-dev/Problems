@@ -1,0 +1,17 @@
+public class RemovingMapkeysInList {
+
+	public static void main(String[] args) {
+	
+		Object ob = new Object();
+
+		List<String> list = new ArrayList<>(List.of("abc", "cdd", "erfd"));
+		Map<String, Object> mp = new HashMap<>();
+		mp.put("abc", ob);
+		mp.put("cdd",ob);
+
+		 list.removeAll(mp.keySet());
+		 
+		 System.out.println(list);
+		
+
+	}
