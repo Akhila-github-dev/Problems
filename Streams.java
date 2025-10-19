@@ -58,11 +58,9 @@ public class Streams {
     //*****************************************************************************************************************************
     
     //max limit
-    
-    
-    Integer integer = listOfIntegers.stream().sorted().max(Comparator.naturalOrder()).get();
-    
-    System.out.println(integer);
+      
+    Integer integer = list.stream().max(Comparator.naturalOrder()).get();
+  	System.out.println(integer);
     
     //*******************************************************************************************************************************
     
@@ -208,3 +206,4 @@ public class StreamExamples {
 
 	}
 }
+
