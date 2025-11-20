@@ -1,0 +1,76 @@
+package org.example;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+import java.util.List;
+
+public class HibernateExample {
+    static SessionFactory sessionFactory;
+    static{
+        Configuration configuration = new Configuration();
+        configuration.configure("hibernate.cfg.xml");
+        configuration.addAnnotatedClass(Sample.class);
+        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+    }
+    
+    public static void main(String[] args) {
+            get();
+            insert();
+            get();
+            delete();
+            get();
+    }
+    public static void get(){
+        Session session = sessionFactory.openSession();
+        //Transaction transaction = session.beginTransaction();
+        String selectQuery = "FROM org.example.Sample";
+        Query<Sample> query = session.createQuery(selectQuery, org.example.Sample.class);
+        // query.setParameter("sampleName","Ravi");
+        List<Sample> list = query.list();
+        System.out.println(list);
+    }
+    public static void update(){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        String updateQuery = " Update Sample set age =: age where id =: id";
+        Query query = session.createQuery(updateQuery);
+        query.setParameter("age",26);
+        query.setParameter("id",7);
+        int rows = query.executeUpdate();
+        transaction.commit();
+        System.out.printf("%d rows got updated\n",rows);
+    }
+
+    public static void delete(){
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        String deleteQuery = " Delete Sample where lower(name) like  lower(:name)";
+        Query query = session.createQuery(deleteQuery);
+        query.setParameter("name", "ravi%");
+        int rows = query.executeUpdate();
+        transaction.commit();
+        System.out.println();
+    }
+
+    public static void insert()
+    {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        Sample s= new Sample();
+        s.setAge(21);
+        s.setId(1);
+        s.setName("Rahul");
+        session.save(s);
+        transaction.commit();
+        System.out.println();
+    }
+
+}
