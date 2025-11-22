@@ -1,1 +1,570 @@
 
+package org.example;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
+
+public class App {
+    static Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) {
+//        insertEmployee();
+//        getDepartmentData();
+//        getEmployeeData();
+//        getEmployeeCourseEnrollData(1);
+//        insertCourses();
+        getCoursesData();
+    }
+
+    public static void insertCourses()
+    {
+        int numberOfCourses=0;
+        System.out.println("Enter the Number of courses you want to add");
+        numberOfCourses=sc.nextInt();
+        Session session = SimpleDBSessionCreator.getSession();
+        session.beginTransaction();
+        while(numberOfCourses-- >0) {
+            sc.nextLine();
+            Course course = new Course();
+            System.out.println("Enter the courseName:: ");
+            course.setcName(sc.nextLine());
+            System.out.println("Enter the courseDescription:: ");
+            course.setDescription(sc.nextLine());
+
+            System.out.println("Enter the course Credits from below options :: ");
+            CourseCredits[] credits = CourseCredits.values();
+            for (int i = 0; i < credits.length; i++) {
+                System.out.printf("%d.%s\n", i + 1, credits[i].name());
+            }
+            int choice= sc.nextInt();
+            if(choice>credits.length)
+                choice=1;
+            course.setCredits(credits[choice-1]);
+            session.save(course);
+        }
+        session.getTransaction().commit();
+        System.out.println("Successfully saved "+numberOfCourses+" courses to Course table");
+    }
+
+    private static void insertEmployee()
+    {
+        Employee employee = new Employee();
+        Department department = new Department();
+        Course course = new Course();
+
+        course.setcName("Credit");
+        course.setDescription(" OCA pod topper");
+        course.setCredits(CourseCredits.FOUR_CREDITS);
+
+        department.setDept_name(DepartmentType.ENGINEERING);
+
+        employee.setName("Akhila");
+        employee.setDepartment(department);
+        employee.getCourses().add(course);
+
+        Session session = SimpleDBSessionCreator.getSession();
+
+        session.beginTransaction();
+        session.save(employee);
+        session.getTransaction().commit();
+
+        System.out.println("Successfully saved Employee Details");
+    }
+
+    private static void getCoursesData(){
+        Session session= SimpleDBSessionCreator.getSession();
+        String HqlQuery = "FROM Course";
+        Query<Course> query = session.createQuery(HqlQuery, Course.class);
+        List<Course> list = query.list();
+        list.forEach(System.out::println);;
+    }
+
+    private static void getEmployeeData(){
+        Session session= SimpleDBSessionCreator.getSession();
+        String HqlQuery = "FROM Employee";
+        Query<Employee> query = session.createQuery(HqlQuery, Employee.class);
+        List<Employee> list = query.list();
+        list.forEach(System.out::println);
+    }
+
+    private static void getDepartmentData()
+    {
+        Session session= SimpleDBSessionCreator.getSession();
+        String HqlQuery = "FROM Department";
+        List<Department> list = session.createQuery(HqlQuery, Department.class).list();
+        list.forEach(System.out::println);
+        session.close();
+    }
+
+    private static void getEmployeeCourseEnrollData(long id)
+    {
+        String hqlQuery = "FROM Employee e JOIN FETCH e.courses c where c.course_id =: id";
+        try{
+            Session session= SimpleDBSessionCreator.getSession();
+            Employee employee = session.createQuery(hqlQuery, Employee.class).setParameter("id",id).getSingleResult();
+            Set<Course> courses = employee.getCourses();
+            courses.forEach(System.out::println);
+            session.close();
+        } catch (Exception e) {
+            System.err.println("AN error Occured!!");
+        }
+    }
+
+    private static Course getCourse()
+    {
+        getCoursesData();
+        System.out.println("Enter 0 to not to subscribe.");
+        System.out.println("Enter the course ID you want to subscribe :: ");
+        Long choice = sc.nextLong();
+        Course course = null;
+        if(choice ==0)
+            return null;
+        Session session = SimpleDBSessionCreator.getSession();
+        session.beginTransaction();
+        return null;
+    }
+
+    private static Student StudentTableInsertor(Laptop laptop) {
+        Student student= new Student();
+        student.setClass_no(9);
+        student.setSname("Rahul");
+        student.setEmail_id("Rahul@student.com");
+        student.setLaptop(laptop);
+        return student;
+    }
+
+    private static Laptop LaptopTableInsertor()
+    {
+        Laptop laptop = new Laptop();
+        laptop.setLap_company("HP");
+        return laptop;
+    }
+
+}
+==================================================================================
+package org.example;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "course")
+public class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pk_course_id")
+    private Long course_id;
+
+    @Column(name = "course_name", unique = true, nullable = false, length = 10)
+    private String cName;
+
+    @Column(name = "course_description", length = 200)
+    private String description;
+
+    @Convert(converter = CourseCreditsConverter.class)
+    @Column(name = "course_credits", nullable = false)
+    private CourseCredits credits;
+
+    @ManyToMany(mappedBy = "courses")
+    private Set<Employee> employees = new HashSet<>();
+
+    public Long getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(Long course_id) {
+        this.course_id = course_id;
+    }
+
+    public String getcName() {
+        return cName;
+    }
+
+    public void setcName(String cName) {
+        this.cName = cName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public CourseCredits getCredits() {
+        return credits;
+    }
+
+    public void setCredits(CourseCredits credits) {
+        this.credits = credits;
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
+    @Transient
+    public int getCreditValue() {
+        return this.credits.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "course_id=" + course_id +
+                ", cName='" + cName + '\'' +
+                ", description='" + description + '\'' +
+                ", credits=" + credits +
+                '}';
+    }
+}
+==========================================================
+package org.example;
+
+public enum CourseCredits {
+    ONE_CREDIT(1),
+    TWO_CREDITS(2),
+    THREE_CREDITS(3),
+    FOUR_CREDITS(4);
+
+    private final int value;
+
+    CourseCredits(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+}
+=========================================
+package org.example;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
+@Converter
+public class CourseCreditsConverter implements AttributeConverter<CourseCredits, Integer> {
+
+    @Override
+    public Integer convertToDatabaseColumn(CourseCredits attribute) {
+        // Convert the Enum constant to its numerical value (1, 2, 3, 4)
+        if (attribute == null) return null;
+        return attribute.getValue();
+    }
+
+    @Override
+    public CourseCredits convertToEntityAttribute(Integer dbData) {
+        // Convert the numerical value back to the Enum constant
+        if (dbData == null) return null;
+        
+        for (CourseCredits credit : CourseCredits.values()) {
+            if (credit.getValue() == dbData) {
+                return credit;
+            }
+        }
+        throw new IllegalArgumentException("Unknown database value: " + dbData);
+    }
+}
+===============================================================
+package org.example;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "department")
+public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long dept_id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
+    private DepartmentType dept_name;
+
+    public long getDept_id() {
+        return dept_id;
+    }
+
+    public void setDept_id(long dept_id) {
+        this.dept_id = dept_id;
+    }
+
+    public DepartmentType getDept_name() {
+        return dept_name;
+    }
+
+    public void setDept_name(DepartmentType dept_name) {
+        this.dept_name = dept_name;
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "dept_id=" + dept_id +
+                ", dept_name='" + dept_name + '\'' +
+                '}';
+    }
+}
+===================================================
+
+package org.example;
+
+public enum DepartmentType {
+    HR,
+    SALES,
+    ENGINEERING,
+    MARKETING,
+    FINANCE
+}
+========================================
+package org.example;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "employee" ,uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"employee_email"} , name = "UK_emp_email")
+})
+public class Employee {
+    @Column(name = "employee_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "employee_name")
+    private  String name;
+
+    @Column(name = "employee_email")
+    private String email;
+
+    @ManyToOne( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_dept_id")
+    private Department department;
+    public long getId() {
+        return id;
+    }
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "employee_course_enroll",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private  Set<Course> courses = new HashSet<Course>();
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Set<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<Course> courses) {
+        this.courses = courses;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", department=" + department +
+                '}';
+    }
+}
+=====================================================================
+
+package org.example;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+
+public class SimpleDBSessionCreator {
+    static SessionFactory sessionFactory;
+    static{
+        Configuration configuration = new Configuration();
+        configuration.configure("hibernate.cfg.xml");
+//        configuration.addAnnotatedClass(Sample.class);
+//        configuration.addAnnotatedClass(Student.class);
+//        configuration.addAnnotatedClass(Laptop.class);
+        configuration.addAnnotatedClass(Employee.class).addAnnotatedClass(Course.class).addAnnotatedClass(Department.class);
+        StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+    }
+    public static Session getSession()
+    {
+        return sessionFactory.openSession();
+    }
+
+}
+========================================================
+package org.example;
+
+
+import javax.persistence.*;
+
+@Entity
+public class Sample {
+    @Id
+    int id;
+    String name;
+    int age;
+
+    public  Sample(){}
+
+    public Sample(int id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Sample{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+=============================================================
+package org.example;
+
+import javax.persistence.*;
+
+@Entity
+@Table( name ="student", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email_id"},name = "UK_Student_EmailID")
+})
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int rolno;
+    @Column(name= "student_name", nullable = false)
+    private String sname;
+    private int class_no;
+    private String email_id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_lap_id")
+    private Laptop laptop;
+
+    public Laptop getLaptop() {
+        return laptop;
+    }
+
+    public void setLaptop(Laptop laptop) {
+        this.laptop = laptop;
+    }
+
+    public int getRolno() {
+        return rolno;
+    }
+
+    public void setRolno(int rolno) {
+        this.rolno = rolno;
+    }
+
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
+    }
+
+    public int getClass_no() {
+        return class_no;
+    }
+
+    public void setClass_no(int class_no) {
+        this.class_no = class_no;
+    }
+
+    public String getEmail_id() {
+        return email_id;
+    }
+
+    public void setEmail_id(String email_id) {
+        this.email_id = email_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "rolno=" + rolno +
+                ", sname='" + sname + '\'' +
+                ", class_no=" + class_no +
+                ", email_id='" + email_id + '\'' +
+                ", laptop=" + laptop +
+                '}';
+    }
+}
